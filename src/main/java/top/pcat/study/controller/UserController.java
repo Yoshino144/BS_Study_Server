@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.logging.Logger;
 
 @Slf4j
 @RestController
@@ -30,6 +31,7 @@ public class UserController {
     @GetMapping("/{codeFlag}/{phone}/{password}")
     public String signIn(@PathVariable String codeFlag, @PathVariable String phone, @PathVariable String password) {
 
+        log.warn(codeFlag+" "+phone+"  "+password);
         if (codeFlag.equals("0")) {
             Gson gson = new Gson();
             return gson.toJson(new R(200, userService.signInByPsw(phone, password)));

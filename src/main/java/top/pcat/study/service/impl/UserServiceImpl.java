@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.pcat.study.dao.UserDao;
 import top.pcat.study.domain.User;
 import top.pcat.study.service.UserService;
+
 @Transactional
 @Slf4j
 @Service
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User signInByPsw(String phone,String password){
+
+        log.warn(" "+phone+"  "+password);
+        log.warn(userDao.signInByPsw(phone,password).toString());
         return userDao.signInByPsw(phone,password);
     }
 

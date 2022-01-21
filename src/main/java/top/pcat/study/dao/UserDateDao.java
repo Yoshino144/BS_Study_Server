@@ -36,11 +36,11 @@ public interface UserDateDao {
             "\tAND up.chapter_id = ch.chapter_id \n" +
             "\tAND up.subject_id = su.id_subject \n" +
             "\tAND up.true_flag = #{trueFlag}")
-    List<WrongProblem> getWrongProblem(String userId, String trueFlag);
+    List<WrongProblem> getWrongProblem(@Param("userId")String userId, @Param("trueFlag")String trueFlag);
 
 
     @Select("select * from user_date_size where user_id = #{userId} and date = #{date}")
-    List<UserDateSize> getTodaySize(String userId, String date);
+    List<UserDateSize> getTodaySize(@Param("userId")String userId,@Param("date")String date);
 
     @Select("select date , size from user_date_size where user_id = #{userId} ORDER BY date DESC")
     List<UserDateSize> getWeekSize(String userId);
