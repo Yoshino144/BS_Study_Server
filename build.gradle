@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'cn.rongcloud.im', name: 'server-sdk-java', version: '3.2.17'
+
     implementation ('org.springframework.boot:spring-boot-configuration-processor')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'mysql:mysql-connector-java'
