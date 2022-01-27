@@ -43,7 +43,7 @@ public class UserRong {
         // for (HostType hosttype : hosttypes) {
         //     hosttype.setConnectTimeout(10000);
         //     hosttype.setReadTimeout(10000);
-        // }
+        // }//
 
         User User = rongCloud.user;
 
