@@ -17,7 +17,7 @@ import java.util.Base64;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserInfoController {
 
     @Autowired

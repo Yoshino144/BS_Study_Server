@@ -22,6 +22,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDAO;
 
+    @Override
+    public User login(String username, String password){
+        return userDAO.login(username, password);
+    }
 
     @Override
     public List<Perms> findPermsByRoleId(String id) {

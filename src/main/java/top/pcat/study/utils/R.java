@@ -5,20 +5,20 @@ import lombok.Data;
 @Data
 public class R {
     private Integer status;
-    private String description;
+    private String msg;
     private Object data;
 
 
     public R(){}
 
-    public R(int status,String description) {
+    public R(int status,String msg) {
         this.status = status;
-        this.description = description;
+        this.msg = msg;
     }
 
-    public R(int status,String description ,Object data) {
+    public R(int status,String msg ,Object data) {
         this.status = status;
-        this.description = description;
+        this.msg = msg;
         this.data = data;
     }
 

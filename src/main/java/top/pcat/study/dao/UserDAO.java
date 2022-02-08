@@ -12,6 +12,13 @@ import java.util.List;
 @Mapper
 public interface UserDAO {
 
+    @Select("SELECT *, t_user.id, t_user.username, t_user_info.* \n" +
+            "FROM t_user\n" +
+            "INNER JOIN t_user_info ON t_user.id = t_user_info.id \n" +
+            "WHERE t_user_info.phone = #{username}\n" +
+            "AND t_user.`password` = #{password}")
+    User login(String username, String password);
+
     @Insert("insert into t_user values(#{id},#{username},#{password},#{salt})")
     void save(User user);
 

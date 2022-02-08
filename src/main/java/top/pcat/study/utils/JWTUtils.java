@@ -2,14 +2,10 @@ package top.pcat.study.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -18,7 +14,7 @@ import java.util.Map;
  * @author: PCat
  * @create: 2022-02-08 22:44
  **/
-public class JwtUtils {
+public class JWTUtils {
 
 
     private static final String  SING = "!Q@W3e4r%T^Y";

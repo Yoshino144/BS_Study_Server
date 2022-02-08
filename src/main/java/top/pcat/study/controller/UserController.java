@@ -1,5 +1,6 @@
 package top.pcat.study.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -11,15 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.pcat.study.entity.User;
 import top.pcat.study.service.UserService;
+import top.pcat.study.utils.JWTUtils;
+import top.pcat.study.utils.R;
 import top.pcat.study.utils.VerifyCodeUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-@Controller
-@RequestMapping("user")
+@RestController
+@Slf4j
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -85,37 +91,30 @@ public class UserController {
         return "redirect:/user/loginview";
     }
 
-    /**
-     * 用来处理身份认证
-     *
-     * @param username
-     * @param password
-     * @return
-     */
-    @RequestMapping("login")
-    public String login(String username, String password,String code,HttpSession session) {
-        //比较验证码
-        String codes = (String) session.getAttribute("code");
-        try {
-            if (codes.equalsIgnoreCase(code)){
-                //获取主体对象
-                Subject subject = SecurityUtils.getSubject();
-                    subject.login(new UsernamePasswordToken(username, password));
-                    return "redirect:/index";
-            }else{
-                throw new RuntimeException("验证码错误!");
-            }
-        } catch (UnknownAccountException e) {
+
+    @RequestMapping("/{codeFlag}/{phone}/{password}")
+    public R login(String username, String password) {
+
+        log.info("用户名: [{}]",username);
+        log.info("密码: [{}]",password);
+        try{
+            User user = new User();
+            Map<String,String> payload =  new HashMap<>();
+            payload.put("id",user.getId());
+            payload.put("name",user.getUsername());
+            //生成JWT的令牌
+            String token = JWTUtils.getToken(payload);
+            return new R(200,"登录成功!",token);
+        }catch (UnknownAccountException e) {
             e.printStackTrace();
-            System.out.println("用户名错误!");
+            return new R(403,"用户名错误!");
         } catch (IncorrectCredentialsException e) {
             e.printStackTrace();
-            System.out.println("密码错误!");
+            return new R(403,"密码错误!");
         }catch (Exception e){
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            return new R(403,e.getMessage());
         }
-        return "redirect:/user/loginview";
+
     }
 
 
