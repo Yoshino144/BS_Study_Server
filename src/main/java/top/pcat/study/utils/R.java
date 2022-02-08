@@ -4,19 +4,21 @@ import lombok.Data;
 
 @Data
 public class R {
-    private Integer flag;
-
+    private Integer status;
+    private String description;
     private Object data;
 
 
     public R(){}
 
-    public R(int flag) {
-        this.flag = flag;
+    public R(int status,String description) {
+        this.status = status;
+        this.description = description;
     }
 
-    public R(int flag, Object data) {
-        this.flag = flag;
+    public R(int status,String description ,Object data) {
+        this.status = status;
+        this.description = description;
         this.data = data;
     }
 

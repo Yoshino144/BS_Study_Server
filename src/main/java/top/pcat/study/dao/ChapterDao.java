@@ -6,7 +6,7 @@ import top.pcat.study.domain.Chapter;
 
 import java.util.List;
 @Mapper
-public interface ChapterMapper {
+public interface ChapterDao {
 
     @Select("select * from chapter where subject_id =#{subjectId} ")
     List<Chapter> getChapterById(String subjectId);

@@ -1,43 +1,53 @@
 package top.pcat.study.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.pcat.study.dao.UserDao;
-import top.pcat.study.domain.User;
+import top.pcat.study.dao.UserDAO;
+import top.pcat.study.entity.Perms;
+import top.pcat.study.entity.User;
 import top.pcat.study.service.UserService;
+import top.pcat.study.utils.SaltUtils;
+
+import java.util.List;
 
 @Transactional
 @Slf4j
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService {
 
+
     @Autowired
-    private UserDao userDao;
+    private UserDAO userDAO;
 
 
     @Override
-    public User signInByPsw(String phone,String password){
-
-        log.warn(" "+phone+"  "+password);
-        log.warn(userDao.signInByPsw(phone,password).toString());
-        return userDao.signInByPsw(phone,password);
+    public List<Perms> findPermsByRoleId(String id) {
+        return userDAO.findPermsByRoleId(id);
     }
 
     @Override
-    public User signInByPhone(String phone){
-        return userDao.signInByPhone(phone);
+    public User findRolesByUserName(String username) {
+        return userDAO.findRolesByUserName(username);
     }
 
     @Override
-    public int register(String name, String password, String phone){
-        User user = new User();
-        user.setName(name);
-        user.setPassword(password);
-        user.setPhone(phone);
-        return userDao.insert(user);
+    public User findByUserName(String username) {
+        return userDAO.findByUserName(username);
     }
 
-
+    @Override
+    public void register(User user) {
+        //处理业务调用dao
+        //1.生成随机盐
+        String salt = SaltUtils.getSalt(8);
+        //2.将随机盐保存到数据
+        user.setSalt(salt);
+        //3.明文密码进行md5 + salt + hash散列
+        Md5Hash md5Hash = new Md5Hash(user.getPassword(),salt,1024);
+        user.setPassword(md5Hash.toHex());
+        userDAO.save(user);
+    }
 }

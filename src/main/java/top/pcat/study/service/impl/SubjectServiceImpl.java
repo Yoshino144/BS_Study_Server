@@ -2,15 +2,13 @@ package top.pcat.study.service.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.pcat.study.dao.ChapterMapper;
-import top.pcat.study.dao.SubjectMapper;
-import top.pcat.study.dao.UserChooseMapper;
-import top.pcat.study.domain.Chapter;
+import top.pcat.study.dao.ChapterDao;
+import top.pcat.study.dao.SubjectDao;
+import top.pcat.study.dao.UserChooseDao;
 import top.pcat.study.domain.Subject;
 import top.pcat.study.domain.Yixuan;
 import top.pcat.study.service.SubjectService;
@@ -24,14 +22,14 @@ public class SubjectServiceImpl implements SubjectService {
 
 
     @Autowired
-    SubjectMapper subjectMapper;
+    SubjectDao subjectMapper;
 
     @Autowired
-    UserChooseMapper userChooseMapper;
+    UserChooseDao userChooseDao;
 
 
     @Autowired
-    ChapterMapper chapterMapper;
+    ChapterDao chapterDao;
 
 //    public String upYixuan(Integer id,String all){
 //        UserChoose userChoose = new UserChoose();
@@ -50,7 +48,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public String getYixuan(String userId) {
-        List<Yixuan> subjectList =  this.userChooseMapper.selectByExample(userId);
+        List<Yixuan> subjectList =  this.userChooseDao.selectByExample(userId);
         System.out.println(userId);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(String.class, new StringNullAdapter());

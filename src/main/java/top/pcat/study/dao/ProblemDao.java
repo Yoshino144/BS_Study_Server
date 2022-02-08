@@ -9,7 +9,7 @@ import top.pcat.study.domain.Problem;
 import java.util.List;
 
 @Mapper
-public interface ProblemMapper {
+public interface ProblemDao {
 
     @Select("select * from problem where subject_id =#{subjectId} and chapter_id = #{chapterId}")
     List<Problem> selectByExample(@Param("subjectId")String subjectId, @Param("chapterId")String chapterId);

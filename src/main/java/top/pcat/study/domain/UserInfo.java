@@ -1,11 +1,9 @@
 package top.pcat.study.domain;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import lombok.Data;
-import lombok.Setter;
 
 @Data
-public class User {
+public class UserInfo {
 
     public String getId() {
         return id;

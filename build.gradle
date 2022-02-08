@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '3.0.0-SNAPSHOT'
+    id 'org.springframework.boot' version '2.6.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
@@ -47,6 +47,13 @@ dependencies {
 
     implementation 'com.alibaba:fastjson:1.2.79'
 
+    implementation 'org.apache.shiro:shiro-spring-boot-starter:1.7.1'
+    implementation 'com.github.theborakompanioni:thymeleaf-extras-shiro:2.0.0'
+    implementation 'org.apache.shiro:shiro-ehcache:1.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // https://mvnrepository.com/artifact/com.auth0/java-jwt
+    implementation 'com.auth0:java-jwt:3.18.3'
 
 }
 

@@ -7,7 +7,7 @@ import top.pcat.study.domain.Yixuan;
 
 import java.util.List;
 @Mapper
-public interface UserChooseMapper {
+public interface UserChooseDao {
 
 //    @Select("select sum(chapter_size) from chapter where id_subject = #{yi}")
 //    Integer allSize(Integer yi);

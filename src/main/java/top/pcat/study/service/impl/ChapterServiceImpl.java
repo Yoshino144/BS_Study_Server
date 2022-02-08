@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.pcat.study.dao.ChapterMapper;
+import top.pcat.study.dao.ChapterDao;
 import top.pcat.study.domain.Chapter;
 import top.pcat.study.service.ChapterService;
 
@@ -15,10 +15,9 @@ import java.util.List;
 public class ChapterServiceImpl implements ChapterService {
 
     @Autowired
-    ChapterMapper chapterMapper;
-
+    ChapterDao chapterDao;
     @Override
     public List<Chapter> getChapterById(String subjectId){
-        return chapterMapper.getChapterById(subjectId);
+        return chapterDao.getChapterById(subjectId);
     }
 }
