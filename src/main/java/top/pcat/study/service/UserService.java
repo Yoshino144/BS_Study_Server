@@ -12,6 +12,8 @@ import java.util.List;
 @Service
 public interface UserService {
 
+    String getIdByPhone(String phone);
+
     String getPassword(String username);
 
     /**
@@ -63,7 +65,7 @@ public interface UserService {
     User findByUserName(String username);
 
     //根据用户名查询所有角色
-    User findRolesByUserName(String username);
+    User findRolesById(String id);
 
     //根据角色id查询权限集合
     List<Perms> findPermsByRoleId(String id);

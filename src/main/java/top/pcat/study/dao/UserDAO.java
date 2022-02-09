@@ -11,6 +11,14 @@ import java.util.List;
 
 @Mapper
 public interface UserDAO {
+@Select("SELECT ur.password " +
+        "FROM t_user ur,t_user_info ui " +
+        "WHERE ui.phone = #{phone} " +
+        "AND ur.id = ui.id")
+    String getPassword(String phone);
+
+    @Select("select id from t_user_info where phone = #{phone}")
+    String getIdByPhone(String phone);
 
     @Select("SELECT *, t_user.id, t_user.username, t_user_info.* \n" +
             "FROM t_user\n" +
@@ -32,8 +40,8 @@ public interface UserDAO {
             "      ON u.id=ur.userid\n" +
             "      LEFT JOIN t_role r\n" +
             "      ON ur.roleid=r.id\n" +
-            "      WHERE u.username=#{username}")
-    User findRolesByUserName(String username);
+            "      WHERE u.id=#{id}")
+    User findRolesById(String id);
 
     //根据角色id查询权限集合
     @Select("SELECT p.id,p.NAME,p.url,r.NAME\n" +

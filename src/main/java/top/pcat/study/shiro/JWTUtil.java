@@ -57,10 +57,10 @@ public class JWTUtil {
     /**
      * 获得token中的信息，无需secret解密也能获得
      */
-    public static String getUsername(String token) {
+    public static String getId(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("username").asString();
+            return jwt.getClaim("id").asString();
         } catch (JWTDecodeException e) {
             return null;
         }

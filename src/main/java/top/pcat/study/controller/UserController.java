@@ -2,23 +2,20 @@ package top.pcat.study.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.pcat.study.entity.User;
 import top.pcat.study.service.UserService;
-import top.pcat.study.utils.R;
-import top.pcat.study.utils.VerifyCodeUtils;
+import top.pcat.study.shiro.JWTUtil;
+import top.pcat.study.utils.Msg;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -90,28 +87,27 @@ public class UserController {
 
 
     @RequestMapping("/{codeFlag}/{phone}/{password}")
-    public R login(String username, String password) {
+    public Msg login(@PathVariable String codeFlag, @PathVariable String phone,@PathVariable String password) {
 
-        log.info("用户名: [{}]",username);
-        log.info("密码: [{}]",password);
-        try{
-            User user = new User();
-            Map<String,String> payload =  new HashMap<>();
-            payload.put("id",user.getId());
-            payload.put("name",user.getUsername());
-            //生成JWT的令牌
-            String token = JWTUtils.getToken(payload);
-            return new R(200,"登录成功!",token);
-        }catch (UnknownAccountException e) {
-            e.printStackTrace();
-            return new R(403,"用户名错误!");
-        } catch (IncorrectCredentialsException e) {
-            e.printStackTrace();
-            return new R(403,"密码错误!");
-        }catch (Exception e){
-            return new R(403,e.getMessage());
+        if ("0".equals(codeFlag)) {
+
+            String realPassword = userService.getPassword(phone);
+            if (realPassword == null) {
+                return Msg.fail().mes("用户名错误");
+            } else if (!realPassword.equals(password)) {
+                return Msg.fail().mes("密码错误");
+            } else {
+                return Msg.success()
+                        .mes("登录成功")
+                        .data(JWTUtil.createToken(userService.getIdByPhone(phone)));
+            }
+
+        } else {
+            //Gson gson = new Gson();
+            //return gson.toJson(new Msg(200, userService.signInByPhone(phone)));
         }
 
+        return null;
     }
 
 

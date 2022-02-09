@@ -28,7 +28,7 @@ public class ShiroConfig {
      * 先经过token过滤器，如果检测到请求头存在 token，则用 token 去 login，接着走 Realm 去验证
      */
     @Bean
-    public ShiroFilterFactoryBean factory(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean factory(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
 
         // 添加自己的过滤器并且取名为jwt
@@ -63,7 +63,7 @@ public class ShiroConfig {
      * 注入 securityManager
      */
     @Bean
-    public SecurityManager securityManager(CustomRealm customRealm) {
+    public DefaultWebSecurityManager securityManager(CustomRealm customRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 设置自定义 realm.
         securityManager.setRealm(customRealm);

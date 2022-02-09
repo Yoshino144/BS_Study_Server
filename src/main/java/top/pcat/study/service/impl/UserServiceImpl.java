@@ -28,18 +28,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getIdByPhone(String phone){
+        return userDAO.getIdByPhone(phone);
+    }
+
+    @Override
     public List<Perms> findPermsByRoleId(String id) {
         return userDAO.findPermsByRoleId(id);
     }
 
     @Override
-    public User findRolesByUserName(String username) {
-        return userDAO.findRolesByUserName(username);
+    public User findRolesById(String id) {
+        return userDAO.findRolesById(id);
     }
 
     @Override
     public User findByUserName(String username) {
         return userDAO.findByUserName(username);
+    }
+
+    @Override
+    public String getPassword(String phone) {
+        return userDAO.getPassword(phone);
+    }
+
+    @Override
+    public String getRole(String username) {
+        return null;
+    }
+
+    @Override
+    public void updatePassword(String username, String newPassword) {
+
+    }
+
+    @Override
+    public List<String> getUser() {
+        return null;
+    }
+
+    @Override
+    public void banUser(String username) {
+
+    }
+
+    @Override
+    public int checkUserBanStatus(String username) {
+        return 0;
+    }
+
+    @Override
+    public String getRolePermission(String username) {
+        return null;
+    }
+
+    @Override
+    public String getPermission(String username) {
+        return null;
     }
 
     @Override

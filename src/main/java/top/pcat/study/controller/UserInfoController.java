@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.pcat.study.service.UserInfoService;
-import top.pcat.study.utils.R;
+import top.pcat.study.utils.Msg;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +28,9 @@ public class UserInfoController {
 
     //登录
     @GetMapping("/{codeFlag}/{phone}/{password}")
-    public R signIn(@PathVariable String codeFlag, @PathVariable String phone, @PathVariable String password) {
+    public Msg signIn(@PathVariable String codeFlag, @PathVariable String phone, @PathVariable String password) {
 
-        return new R(200, "",userService.signInByPhone(phone));
+        return null;
 //        log.warn(codeFlag+" "+phone+"  "+password);
 //        if (codeFlag.equals("0")) {
 //            Gson gson = new Gson();
@@ -45,7 +45,8 @@ public class UserInfoController {
     @PostMapping("/{name}/{password}/{phone}")
     public String register(@PathVariable String name, @PathVariable String password, @PathVariable String phone) {
         Gson gson = new Gson();
-        return gson.toJson(new R(200, "",userService.register(name, password, phone) > 0));
+        //return gson.toJson(new Msg(200, "",userService.register(name, password, phone) > 0));
+        return null;
     }
 
     @PostMapping("/{userId}")

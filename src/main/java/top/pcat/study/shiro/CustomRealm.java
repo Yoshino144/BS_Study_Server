@@ -12,9 +12,13 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import top.pcat.study.entity.Perms;
+import top.pcat.study.entity.User;
 import top.pcat.study.service.UserService;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -46,23 +50,24 @@ public class CustomRealm extends AuthorizingRealm {
         System.out.println("————身份认证方法————");
         String token = (String) authenticationToken.getCredentials();
         // 解密获得username，用于和数据库进行对比
-        String username = JWTUtil.getUsername(token);
-        if (username == null || !JWTUtil.verify(token, username)) {
+        String id = JWTUtil.getId(token);
+        if (id == null || !JWTUtil.verify(token, id)) {
             throw new AuthenticationException("token认证失败！");
         }
 
         /* 以下数据库查询可根据实际情况，可以不必再次查询，这里我两次查询会很耗资源
          * 我这里增加两次查询是因为考虑到数据库管理员可能自行更改数据库中的用户信息
          */
-        String password = userService.getPassword(username);
+        String password = userService.getPassword(id);
         if (password == null) {
             throw new AuthenticationException("该用户不存在！");
         }
-        int ban = userService.checkUserBanStatus(username);
+        int ban = userService.checkUserBanStatus(id);
         if (ban == 1) {
             throw new AuthenticationException("该用户已被封号！");
         }
         return new SimpleAuthenticationInfo(token, token, "MyRealm");
+
     }
 
     /**
@@ -71,7 +76,7 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         System.out.println("————权限认证————");
-        String username = JWTUtil.getUsername(principals.toString());
+        String username = JWTUtil.getId(principals.toString());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //获得该用户角色
         String role = userService.getRole(username);
