@@ -1,91 +1,104 @@
 package top.pcat.study.config;
 
 
-import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.realm.Realm;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.pcat.study.shiro.cache.RedisCacheManager;
-import top.pcat.study.shiro.realms.CustomerRealm;
+import org.apache.shiro.mgt.SecurityManager;
+import top.pcat.study.shiro.CustomRealm;
+import top.pcat.study.shiro.JWTFilter;
 
+import javax.servlet.Filter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 用来整合shiro框架相关的配置类
+ * shiro配置类
  */
 @Configuration
 public class ShiroConfig {
-
-    @Bean(name = "shiroDialect")
-    public ShiroDialect shiroDialect(){
-        return new ShiroDialect();
-    }
-
-
-    //1.创建shiroFilter  //负责拦截所有请求
+    /**
+     * 先经过token过滤器，如果检测到请求头存在 token，则用 token 去 login，接着走 Realm 去验证
+     */
     @Bean
-    public ShiroFilterFactoryBean getShiroFilterFactoryBean(DefaultWebSecurityManager defaultWebSecurityManager){
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+    public ShiroFilterFactoryBean factory(SecurityManager securityManager) {
+        ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
 
-        //给filter设置安全管理器
-        shiroFilterFactoryBean.setSecurityManager(defaultWebSecurityManager);
+        // 添加自己的过滤器并且取名为jwt
+        Map<String, Filter> filterMap = new LinkedHashMap<>();
+        //设置我们自定义的JWT过滤器
+        filterMap.put("jwt", (Filter) new JWTFilter());
+        factoryBean.setFilters(filterMap);
+        factoryBean.setSecurityManager(securityManager);
+        // 设置无权限时跳转的 url;
+        factoryBean.setUnauthorizedUrl("/unauthorized/无权限");
+        Map<String, String> filterRuleMap = new HashMap<>();
+        // 所有请求通过我们自己的JWT Filter
+        filterRuleMap.put("/**", "jwt");
+        // 放行不需要权限认证的接口
+        //放行Swagger接口
+        filterRuleMap.put("/v2/api-docs", "anon");
+        filterRuleMap.put("/swagger-resources/configuration/ui", "anon");
+        filterRuleMap.put("/swagger-resources", "anon");
+        filterRuleMap.put("/swagger-resources/configuration/security", "anon");
+        filterRuleMap.put("/swagger-ui.html", "anon");
+        filterRuleMap.put("/webjars/**", "anon");
+        //放行登录接口和其他不需要权限的接口
+        filterRuleMap.put("/login", "anon");
+        filterRuleMap.put("/unauthorized/**", "anon");
 
-        //配置系统受限资源
-        //配置系统公共资源
-        Map<String,String> map = new HashMap<String,String>();
-        map.put("/login.html","anon");//anon 设置为公共资源  放行资源放在下面
-        map.put("/user/getImage","anon");//anon 设置为公共资源  放行资源放在下面
-        map.put("/user/register","anon");//anon 设置为公共资源  放行资源放在下面
-        map.put("/user/registerview","anon");//anon 设置为公共资源  放行资源放在下面
-        map.put("/user/login","anon");//anon 设置为公共资源  放行资源放在下面
+        factoryBean.setFilterChainDefinitionMap(filterRuleMap);
+        return factoryBean;
 
-        map.put("/**","authc");//authc 请求这个资源需要认证和授权
-
-        //默认认证界面路径
-        shiroFilterFactoryBean.setLoginUrl("/user/loginview");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
-
-
-        return shiroFilterFactoryBean;
     }
 
-    //2.创建安全管理器
+    /**
+     * 注入 securityManager
+     */
     @Bean
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(Realm realm){
-        DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
-        //给安全管理器设置
-        defaultWebSecurityManager.setRealm(realm);
+    public SecurityManager securityManager(CustomRealm customRealm) {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        // 设置自定义 realm.
+        securityManager.setRealm(customRealm);
 
-        return defaultWebSecurityManager;
+        /*
+         * 关闭shiro自带的session
+         */
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        securityManager.setSubjectDAO(subjectDAO);
+        return securityManager;
     }
 
-    //3.创建自定义realm
+    /**
+     * 添加注解支持
+     */
     @Bean
-    public Realm getRealm(){
-        CustomerRealm customerRealm = new CustomerRealm();
-
-        //修改凭证校验匹配器
-        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
-        //设置加密算法为md5
-        credentialsMatcher.setHashAlgorithmName("MD5");
-        //设置散列次数
-        credentialsMatcher.setHashIterations(1024);
-        customerRealm.setCredentialsMatcher(credentialsMatcher);
-
-
-        //开启缓存管理
-        customerRealm.setCacheManager(new RedisCacheManager());
-        customerRealm.setCachingEnabled(true);//开启全局缓存
-        customerRealm.setAuthenticationCachingEnabled(true);//认证认证缓存
-        customerRealm.setAuthenticationCacheName("authenticationCache");
-        customerRealm.setAuthorizationCachingEnabled(true);//开启授权缓存
-        customerRealm.setAuthorizationCacheName("authorizationCache");
-
-        return customerRealm;
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        // 强制使用cglib，防止重复代理和可能引起代理出错的问题
+        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+        return defaultAdvisorAutoProxyCreator;
     }
 
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager);
+        return advisor;
+    }
+
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
 }
