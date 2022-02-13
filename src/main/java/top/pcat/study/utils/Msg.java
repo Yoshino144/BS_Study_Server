@@ -49,7 +49,7 @@ public class Msg {
     public Msg mes(String mes) {
         this.message = mes;
         return this;
-    }
+    }//
 
     public Msg data(String data) {
         this.data = data;
