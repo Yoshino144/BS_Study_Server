@@ -12,13 +12,9 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import top.pcat.study.entity.Perms;
-import top.pcat.study.entity.User;
 import top.pcat.study.service.UserService;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -76,14 +72,14 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         System.out.println("————权限认证————");
-        String username = JWTUtil.getId(principals.toString());
+        String id = JWTUtil.getId(principals.toString());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //获得该用户角色
-        String role = userService.getRole(username);
+        String role = userService.getRole(id);
         //每个角色拥有默认的权限
-        String rolePermission = userService.getRolePermission(username);
+        String rolePermission = userService.getRolePermission(id);
         //每个用户可以设置新的权限
-        String permission = userService.getPermission(username);
+        String permission = userService.getPermission(id);
         Set<String> roleSet = new HashSet<>();
         Set<String> permissionSet = new HashSet<>();
         //需要将 role, permission 封装到 Set 作为 info.setRoles(), info.setStringPermissions() 的参数

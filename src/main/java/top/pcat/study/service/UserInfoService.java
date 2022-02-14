@@ -1,14 +1,26 @@
 package top.pcat.study.service;
 
-
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import top.pcat.study.dao.UserInfoDao;
 import top.pcat.study.domain.UserInfo;
 
+@Transactional
+@Slf4j
 @Service
-public interface UserInfoService {
-    UserInfo signInByPsw(String phone, String password);
-    UserInfo signInByPhone(String phone);
+public class UserInfoService  {
 
-    int register(String name, String password, String phone);
+    @Autowired
+    private UserInfoDao userDao;
+
+    public UserInfo getUserInfo(String userId){
+        return userDao.selectById(userId);
+    }
+
+    public int update(UserInfo userInfo){
+        return userDao.updateById(userInfo);
+    }
 
 }

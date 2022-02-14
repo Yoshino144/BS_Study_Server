@@ -9,6 +9,8 @@ import top.pcat.study.domain.UserInfo;
 @Mapper
 public interface UserInfoDao extends BaseMapper<UserInfo> {
 
+
+
     @Select("select * from user where password = #{password} and phone = #{phone}")
     UserInfo signInByPsw(@Param("phone")String phone, @Param("password") String password);
 

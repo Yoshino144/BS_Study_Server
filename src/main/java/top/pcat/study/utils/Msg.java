@@ -12,7 +12,7 @@ public class Msg {
     private String message;
 
     // 封装有效数据
-    private String data ;
+    private Object data ;
 
     public static Msg success() {
         Msg result = new Msg();
@@ -51,7 +51,7 @@ public class Msg {
         return this;
     }//
 
-    public Msg data(String data) {
+    public Msg data(Object data) {
         this.data = data;
         return this;
     }
@@ -72,11 +72,11 @@ public class Msg {
         this.message = message;
     }
 
-    public String getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Object data) {
         this.data = data;
     }
 

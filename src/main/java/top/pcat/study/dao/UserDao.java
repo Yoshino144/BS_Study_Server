@@ -1,21 +1,30 @@
 package top.pcat.study.dao;
 
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import top.pcat.study.domain.UserInfo;
 import top.pcat.study.entity.Perms;
 import top.pcat.study.entity.User;
 
 import java.util.List;
 
 @Mapper
-public interface UserDAO {
+public interface UserDao extends BaseMapper<User> {
 @Select("SELECT ur.password " +
         "FROM t_user ur,t_user_info ui " +
         "WHERE ui.phone = #{phone} " +
         "AND ur.id = ui.id")
     String getPassword(String phone);
+
+@Select("SELECT t_user.* " +
+        "FROM t_user " +
+        "INNER JOIN t_user_info " +
+        "ON t_user.id = t_user_info.id " +
+        "WHERE t_user_info.phone = #{phone} ")
+    User getAllByPhone(String phone);
 
     @Select("select id from t_user_info where phone = #{phone}")
     String getIdByPhone(String phone);
@@ -28,7 +37,7 @@ public interface UserDAO {
     User login(String username, String password);
 
     @Insert("insert into t_user values(#{id},#{username},#{password},#{salt})")
-    void save(User user);
+    void register(String id, String password, String salt);
 
     @Select("select id,username,password,salt from t_user where username = #{username}")
     User findByUserName(String username);

@@ -1,0 +1,43 @@
+logging:
+  level:
+    root: info
+minio:
+  accessKey: admin
+  endpoint: http://localhost:9090
+  secretKey: admin1234
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: assign_uuid
+      table-prefix: t_
+  mapper-locations: classpath:mapper/*.xml
+server:
+  max-http-header-size: 10240000
+  port: 12345
+  servlet:
+    context-path: /
+spring:
+  banner:
+    location: static/banner.txt
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      password: root
+      url: jdbc:mysql://localhost:3306/online_study
+      username: root
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html

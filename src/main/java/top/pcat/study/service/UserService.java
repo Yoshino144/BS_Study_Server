@@ -1,72 +1,98 @@
 package top.pcat.study.service;
 
-
-
-import org.apache.ibatis.annotations.Select;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import top.pcat.study.dao.UserDao;
+import top.pcat.study.dao.UserInfoDao;
+import top.pcat.study.domain.UserInfo;
 import top.pcat.study.entity.Perms;
 import top.pcat.study.entity.User;
+import top.pcat.study.utils.SaltUtils;
+import top.pcat.study.utils.UUIDUtils;
 
 import java.util.List;
 
-@Service
-public interface UserService {
+@Transactional(rollbackFor=Exception.class)
+@Slf4j
+@Service("userService")
+public class UserService  {
 
-    String getIdByPhone(String phone);
+    @Autowired
+    private UserDao userDAO;
+    @Autowired
+    private UserInfoDao userInfoDao;
 
-    String getPassword(String username);
+    public User getAllByPhone(String phone){
+        return userDAO.getAllByPhone(phone);
+    }
 
-    /**
-     * 获得角色权限
-     */
-    String getRole(String username);
+    public String getIdByPhone(String phone){
+        return userDAO.getIdByPhone(phone);
+    }
 
-    /**
-     * 修改密码
-     */
-    void updatePassword(String username,String newPassword);
-
-    /**
-     * 获得存在的用户
-     */
-    List<String> getUser();
-
-    /**
-     * 封号
-     */
-    void banUser(String username);
-
-    /**
-     * 检查用户状态
-     */
-    int checkUserBanStatus(String username);
-
-    /**
-     * 获得用户角色默认的权限
-     */
-    String getRolePermission(String username);
-
-    /**
-     * 获得用户的权限
-     */
-    String getPermission(String username);
-    //注册用户方法
-    void register(User user);
+    public int register(String phone, String password, String name) {
+        String salt = SaltUtils.getSalt(8);
+        Md5Hash md5Hash = new Md5Hash(password,salt,1024);
+        String uuid= UUIDUtils.getUUID();
+        int flag= 0;
+        //插入账号
+        flag += userDAO.insert(new User(uuid,md5Hash.toString(),salt,null));
+        //插入用户数据
+        flag += userInfoDao.insert(new UserInfo(uuid,phone,name));
+        return flag;
+    }
 
 
-    @Select("select * " +
-            "from t_user us,t_user_info ui " +
-            "where us.password = #{password} " +
-            "and ui.phone = #{phone} " +
-            "and ui.id = us.id")
-    User login(String username, String password);
+    public User login(String username, String password){
+        return userDAO.login(username, password);
+    }
 
-    //根据用户名查询业务的方法
-    User findByUserName(String username);
 
-    //根据用户名查询所有角色
-    User findRolesById(String id);
+    public List<Perms> findPermsByRoleId(String id) {
+        return userDAO.findPermsByRoleId(id);
+    }
 
-    //根据角色id查询权限集合
-    List<Perms> findPermsByRoleId(String id);
+    public User findRolesById(String id) {
+        return userDAO.findRolesById(id);
+    }
+
+    public User findByUserName(String username) {
+        return userDAO.findByUserName(username);
+    }
+
+    public String getPassword(String phone) {
+        return userDAO.getPassword(phone);
+    }
+
+    public String getRole(String username) {
+        return null;
+    }
+
+    public void updatePassword(String username, String newPassword) {
+
+    }
+
+    public List<String> getUser() {
+        return null;
+    }
+
+    public void banUser(String username) {
+
+    }
+
+    public int checkUserBanStatus(String username) {
+        return 0;
+    }
+
+    public String getRolePermission(String username) {
+        return null;
+    }
+
+    public String getPermission(String username) {
+        return null;
+    }
+
 }

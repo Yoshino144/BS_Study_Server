@@ -1,114 +1,144 @@
 package top.pcat.study.controller;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import top.pcat.study.domain.UserInfo;
 import top.pcat.study.entity.User;
+import top.pcat.study.service.UserInfoService;
 import top.pcat.study.service.UserService;
 import top.pcat.study.shiro.JWTUtil;
 import top.pcat.study.utils.Msg;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 @RestController
 @Slf4j
 @RequestMapping("/users")
 public class UserController {
 
+    private static final Gson gson = new Gson();
+
     @Autowired
     private UserService userService;
 
 
-    /**
-     * 跳转到register请求
-     */
-    @RequestMapping("registerview")
-    public String register(){
-        System.out.println("跳转之register的html");
-        return "register";
-    }
+    @Autowired
+    private UserInfoService userInfoService;
 
     /**
-     * 跳转到login请求
+     * 通过 手机号+密码 登录
      */
-    @RequestMapping("loginview")
-    public String login(){
-        System.out.println("跳转之login的html");
-        return "login";
-    }
+    @GetMapping("/{phone}/{password}")
+    public Msg login(@PathVariable String phone, @PathVariable String password) {
 
-
-    /**
-     * 验证码方法
-     */
-    @RequestMapping("getImage")
-    public void getImage(HttpSession session, HttpServletResponse response) throws IOException {
-        //生成验证码
-        String code = VerifyCodeUtils.generateVerifyCode(4);
-        //验证码放入session
-        session.setAttribute("code",code);
-        //验证码存入图片
-        ServletOutputStream os = response.getOutputStream();
-        response.setContentType("image/png");
-        VerifyCodeUtils.outputImage(220,60,os,code);
-    }
-
-    /**
-     * 用户注册
-     */
-    @RequestMapping("register")
-    public String register(User user) {
-        try {
-            userService.register(user);
-            return "redirect:/user/loginview";
-        }catch (Exception e){
-            e.printStackTrace();
-            return "redirect:/user/registerview";
+        //获取该用户密码
+        User user = userService.getAllByPhone(phone);
+        if (user.getPassword() == null) {
+            return Msg.fail().mes("用户名错误");
         }
-    }
-
-
-    /**
-     * 退出登录
-     */
-    @RequestMapping("logout")
-    public String logout() {
-        Subject subject = SecurityUtils.getSubject();
-        subject.logout();//退出用户
-        return "redirect:/user/loginview";
-    }
-
-
-    @RequestMapping("/{codeFlag}/{phone}/{password}")
-    public Msg login(@PathVariable String codeFlag, @PathVariable String phone,@PathVariable String password) {
-
-        if ("0".equals(codeFlag)) {
-
-            String realPassword = userService.getPassword(phone);
-            if (realPassword == null) {
-                return Msg.fail().mes("用户名错误");
-            } else if (!realPassword.equals(password)) {
-                return Msg.fail().mes("密码错误");
-            } else {
-                return Msg.success()
-                        .mes("登录成功")
-                        .data(JWTUtil.createToken(userService.getIdByPhone(phone)));
-            }
-
+        Md5Hash md5Hash = new Md5Hash(password, user.getSalt(), 1024);
+        if (!user.getPassword().equals(md5Hash.toString())) {
+            return Msg.fail().mes("密码错误");
         } else {
-            //Gson gson = new Gson();
-            //return gson.toJson(new Msg(200, userService.signInByPhone(phone)));
+            return Msg.success()
+                    .mes("登录成功")
+                    .data(JWTUtil.createToken(userService.getIdByPhone(phone)));
         }
 
-        return null;
     }
 
+    /**
+     * 注册
+     */
+    @PostMapping("/{phone}/{password}/{name}")
+    public Msg register(@PathVariable String phone, @PathVariable String password, @PathVariable String name) {
 
+        //获取是否存在该用户
+        String realPassword = userService.getIdByPhone(phone);
+
+        // 不存在该用户
+        if (realPassword == null) {
+            if (2 == userService.register(phone, password, name)) {
+
+                return Msg.success().mes("注册成功");
+            } else {
+                return Msg.fail().mes("注册失败");
+            }
+        } else {
+            return Msg.fail().mes("用户已存在");
+        }
+    }
+
+    /**
+     * 通过 手机号+验证码 登录
+     */
+    @GetMapping("/{phone}")
+    public Msg loginOnlyPhone(@PathVariable String phone) {
+
+        //获取该用户密码
+        User user = userService.getAllByPhone(phone);
+        if (user.getPassword() == null) {
+            return Msg.fail().mes("用户名不存在");
+        }
+        return Msg.success()
+                .mes("登录成功")
+                .data(JWTUtil.createToken(userService.getIdByPhone(phone)));
+
+    }
+
+    /**
+     * 获取用户信息
+     */
+    @GetMapping("/{userId}/infos")
+    public Msg getUserInfo(@PathVariable String userId) {
+        try {
+            return Msg.success()
+                    .mes("获取成功")
+                    .data(userInfoService.getUserInfo(userId));
+        } catch (Exception e) {
+            return Msg.fail().mes("获取失败").data(e.toString());
+        }
+
+    }
+
+    /**
+     * 上传用户信息
+     */
+    @PutMapping("/{userId}/infos")
+    public Msg putUserInfo(@PathVariable String userId, @RequestBody String userInfoJson) {
+        try {
+            return Msg.success()
+                    .mes("修改成功")
+                    .data(userInfoService.update(gson.fromJson(userInfoJson, UserInfo.class)));
+        } catch (Exception e) {
+            return Msg.fail().mes("修改失败").data(e.toString());
+        }
+
+    }
+
+    /**
+     * 上传用户头像
+     */
+    @PostMapping("/{userId}")
+    public Boolean upImg(@PathVariable String userId, HttpServletRequest request) {
+        String base64 = request.getParameter("base64");
+        try {
+            Base64.Decoder decoder = Base64.getDecoder();
+            byte[] result = decoder.decode(base64);
+            InputStream inputStream = new ByteArrayInputStream(result);
+            log.info("保存图片："+userId+".png");
+            minioClient.putObject(
+                    PutObjectArgs.builder().bucket("profile.photo").object(userId + ".png").stream(
+                                    inputStream, -1, 10485760)
+                            .contentType("image/png")
+                            .build());
+            return true;
+        } catch (Exception e) {
+            log.warn(String.valueOf(e));
+        }
+        return false;
+    }
 }
