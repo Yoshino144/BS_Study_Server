@@ -1,12 +1,15 @@
 package top.pcat.study.controller;
 
 import com.google.gson.Gson;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import top.pcat.study.domain.LoginReq;
 import top.pcat.study.domain.UserInfo;
 import top.pcat.study.entity.User;
 import top.pcat.study.service.UserInfoService;
@@ -14,9 +17,15 @@ import top.pcat.study.service.UserService;
 import top.pcat.study.shiro.JWTUtil;
 import top.pcat.study.utils.Msg;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Base64;
+
 @RestController
 @Slf4j
-@RequestMapping("/users")
+@RequestMapping(value ="/users" ,produces = "application/json;charset=utf-8")
 public class UserController {
 
     private static final Gson gson = new Gson();
@@ -24,6 +33,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Resource
+    private MinioClient minioClient;
 
     @Autowired
     private UserInfoService userInfoService;
@@ -43,9 +54,10 @@ public class UserController {
         if (!user.getPassword().equals(md5Hash.toString())) {
             return Msg.fail().mes("密码错误");
         } else {
+            String uuid = userService.getIdByPhone(phone);
             return Msg.success()
                     .mes("登录成功")
-                    .data(JWTUtil.createToken(userService.getIdByPhone(phone)));
+                    .data(new LoginReq(uuid,JWTUtil.createToken(uuid)));
         }
 
     }
@@ -54,7 +66,7 @@ public class UserController {
      * 注册
      */
     @PostMapping("/{phone}/{password}/{name}")
-    public Msg register(@PathVariable String phone, @PathVariable String password, @PathVariable String name) {
+    public Msg register(@PathVariable String phone, @PathVariable String password, @RequestBody String name) {
 
         //获取是否存在该用户
         String realPassword = userService.getIdByPhone(phone);
@@ -82,10 +94,13 @@ public class UserController {
         User user = userService.getAllByPhone(phone);
         if (user.getPassword() == null) {
             return Msg.fail().mes("用户名不存在");
+        }else{
+
+            String uuid = userService.getIdByPhone(phone);
+            return Msg.success()
+                    .mes("登录成功")
+                    .data(new LoginReq(uuid,JWTUtil.createToken(uuid)));
         }
-        return Msg.success()
-                .mes("登录成功")
-                .data(JWTUtil.createToken(userService.getIdByPhone(phone)));
 
     }
 
@@ -107,8 +122,8 @@ public class UserController {
     /**
      * 上传用户信息
      */
-    @PutMapping("/{userId}/infos")
-    public Msg putUserInfo(@PathVariable String userId, @RequestBody String userInfoJson) {
+    @PutMapping("/infos")
+    public Msg putUserInfo( @RequestBody String userInfoJson) {
         try {
             return Msg.success()
                     .mes("修改成功")
@@ -122,7 +137,7 @@ public class UserController {
     /**
      * 上传用户头像
      */
-    @PostMapping("/{userId}")
+    @PostMapping("/{userId}/infos")
     public Boolean upImg(@PathVariable String userId, HttpServletRequest request) {
         String base64 = request.getParameter("base64");
         try {

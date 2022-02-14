@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @program: study
@@ -94,7 +95,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         try {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
             //设置编码，否则中文字符在重定向时会变为空字符串
-            message = URLEncoder.encode(message, "UTF-8");
+            message = URLEncoder.encode(message, StandardCharsets.UTF_8);
             httpServletResponse.sendRedirect("/unauthorized/" + message);
         } catch (IOException e) {
             logger.error(e.getMessage());
