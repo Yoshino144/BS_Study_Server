@@ -19,18 +19,18 @@ public interface UserChooseDao {
 //    List<Integer> yixSubject(String userId);
 
     @Select("SELECT\n" +
-            "\tchoose_subject.id_subject,\n" +
-            "\tname_subject,\n" +
+            "\tt_subject_choose.subject_id,\n" +
+            "\tsubject_name,\n" +
             "\tchoose_time,\n" +
-            "\tfounder_subject,\n" +
-            "\ttime_subject,\n" +
-            "\tprivate_subject,\n" +
-            "\tsize_subject,\n" +
-            "\tofficial_subject \n" +
+            "\tsubject_founder,\n" +
+            "\tsubject_time,\n" +
+            "\tsubject_private,\n" +
+            "\tsubject_size,\n" +
+            "\tsubject_official \n" +
             "FROM\n" +
-            "\tchoose_subject,subject \n" +
+            "\tt_subject_choose,t_subject \n" +
             "WHERE\n" +
-            "\tchoose_subject.id_subject = subject.id_subject \n" +
-            "\tAND choose_subject.id_user = 'df6f4977e1711b31ff6481403cd6de2b'")
+            "\tt_subject_choose.subject_id = t_subject.subject_id \n" +
+            "\tAND t_subject_choose.user_id = #{userId}")
     List<Yixuan> selectByExample(String userId);
 }

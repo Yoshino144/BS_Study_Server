@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface SubjectDao {
 
-    @Select("select * from subject")
+    @Select("select * from t_subject")
     List<Subject> selectByExample();
 
 }

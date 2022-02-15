@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface ChapterDao {
 
-    @Select("select * from chapter where subject_id =#{subjectId} ")
+    @Select("select * from t_chapter where subject_id =#{subjectId} ")
     List<Chapter> getChapterById(String subjectId);
 
 }

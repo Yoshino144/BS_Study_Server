@@ -1,5 +1,8 @@
 package top.pcat.study.domain;
 
+import lombok.Data;
+
+@Data
 public class WrongProblem {
 
     private String answer;

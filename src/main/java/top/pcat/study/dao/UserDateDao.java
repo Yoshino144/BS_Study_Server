@@ -11,13 +11,13 @@ import java.util.List;
 @Mapper
 public interface UserDateDao {
 
-    @Select("SELECT SUM(chapter_size) as yiXuanAllSize from choose_subject as cs , chapter as cp where cs.id_subject = cp.subject_id and cs.id_user = #{userId}")
+    @Select("SELECT SUM(chapter_size) as yiXuanAllSize from t_subject_choose as cs , t_chapter as cp where cs.subject_id = cp.subject_id and cs.user_id = #{userId}")
     String getYiXuanAllSize(String userId);
 
-    @Select("SELECT COUNT(*) as yiXuanDoSize from user_problem_data where user_id = #{userId}")
+    @Select("SELECT COUNT(*) as yiXuanDoSize from t_user_problem_data where user_id = #{userId}")
     String getYiXuanDoSize(String userId);
 
-    @Select("select size from user_date_size where date=  curdate() and user_id = #{userId}")
+    @Select("select size from t_user_daily_data where date=  curdate() and user_id = #{userId}")
     String getTodaySizeSingle(String userId);
 
     @Select("SELECT\n" +
@@ -25,24 +25,24 @@ public interface UserDateDao {
             "\tup.true_flag,\n" +
             "\tsu.name_subject,\n" +
             "\tch.chapter_name,\n" +
-            "\tsu.id_subject,\n" +
+            "\tsu.subject_id,\n" +
             "\tch.chapter_id \n" +
             "FROM\n" +
-            "\tuser_problem_data AS up,\n" +
-            "\tSUBJECT AS su,\n" +
-            "\tchapter AS ch \n" +
+            "\tt_user_problem_data AS up,\n" +
+            "\tt_SUBJECT AS su,\n" +
+            "\tt_chapter AS ch \n" +
             "WHERE\n" +
             "\tup.user_id = #{userId} \n" +
             "\tAND up.chapter_id = ch.chapter_id \n" +
-            "\tAND up.subject_id = su.id_subject \n" +
+            "\tAND up.subject_id = su.subject_id \n" +
             "\tAND up.true_flag = #{trueFlag}")
     List<WrongProblem> getWrongProblem(@Param("userId")String userId, @Param("trueFlag")String trueFlag);
 
 
-    @Select("select * from user_date_size where user_id = #{userId} and date = #{date}")
+    @Select("select * from t_user_daily_data where user_id = #{userId} and date = #{date}")
     List<UserDateSize> getTodaySize(@Param("userId")String userId,@Param("date")String date);
 
-    @Select("select date , size from user_date_size where user_id = #{userId} ORDER BY date DESC")
+    @Select("select date , size from t_user_daily_data where user_id = #{userId} ORDER BY date DESC")
     List<UserDateSize> getWeekSize(String userId);
 
 

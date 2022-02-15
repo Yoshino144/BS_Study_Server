@@ -1,8 +1,11 @@
 package top.pcat.study.domain;
 
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class UserDateSize {
 
   private String userId;

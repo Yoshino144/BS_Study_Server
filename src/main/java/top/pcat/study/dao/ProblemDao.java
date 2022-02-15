@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface ProblemDao {
 
-    @Select("select * from problem where subject_id =#{subjectId} and chapter_id = #{chapterId}")
+    @Select("select * from t_problem where subject_id =#{subjectId} and chapter_id = #{chapterId}")
     List<Problem> selectByExample(@Param("subjectId")String subjectId, @Param("chapterId")String chapterId);
 
 }
