@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pcat.study.dao.UserDateDao;
 import top.pcat.study.domain.UserDateSize;
-import top.pcat.study.domain.WrongProblem;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,9 +35,7 @@ public class UserDateService  {
                 "\"todaySize\":"+todaySizeSingle + "}";
     }
 
-    public List<WrongProblem> getWrongProblem(String userId, String trueFlag){
-        return userDayMapper.getWrongProblem(userId,trueFlag);
-    }
+
 
     public long getTodaySize(String userId) {
         LocalDate date = LocalDate.now();

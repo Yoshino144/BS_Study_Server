@@ -20,7 +20,7 @@ public class ChapterController {
     @Autowired
     ChapterService chapterService;
 
-    @GetMapping("/getBySubjectId/{subjectId}")
+    @GetMapping("/{subjectId}")
     public List<Chapter> getChapterById(@PathVariable String subjectId) {
         return this.chapterService.getChapterById(subjectId);
     }

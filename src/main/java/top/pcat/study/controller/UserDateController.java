@@ -3,10 +3,7 @@ package top.pcat.study.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import top.pcat.study.domain.WrongProblem;
 import top.pcat.study.service.UserDateService;
-
-import java.util.List;
 
 
 @Slf4j
@@ -17,18 +14,17 @@ public class UserDateController {
     @Autowired
     UserDateService userDayService;
 
-    @GetMapping("/4/{userId}")
+    @GetMapping("/three/{userId}")
     public String getSize(@PathVariable String userId) {
         return this.userDayService.getSize(userId);
     }
 
-    @GetMapping("/3/{userId}/{trueFlag}")
-    public List<WrongProblem> getWrongProblem(@PathVariable String userId, @PathVariable String trueFlag) {
-        return this.userDayService.getWrongProblem(userId,trueFlag);
-    }
-
-
-    @GetMapping("/0/{userId}")
+    /**
+     * 获取今日数据
+     * @param userId
+     * @return
+     */
+    @GetMapping("/day/{userId}")
     public String getTodaySize(@PathVariable String userId) {
         try {
             Integer res = Math.toIntExact(this.userDayService.getTodaySize(userId));
@@ -41,8 +37,12 @@ public class UserDateController {
         return "";
     }
 
-
-    @GetMapping("/1/{userId}")
+    /**
+     * 获取周数据
+     * @param userId
+     * @return
+     */
+    @GetMapping("/week/{userId}")
     public String getWeekSize(@PathVariable String userId) {
         try {
             String res = this.userDayService.getWeekSize(userId);
