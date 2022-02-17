@@ -3,6 +3,7 @@ package top.pcat.study.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import top.pcat.study.domain.Subject;
 import top.pcat.study.domain.Yixuan;
 
 import java.util.List;
@@ -19,18 +20,11 @@ public interface UserChooseDao {
 //    List<Integer> yixSubject(String userId);
 
     @Select("SELECT\n" +
-            "\tt_subject_choose.subject_id,\n" +
-            "\tsubject_name,\n" +
-            "\tchoose_time,\n" +
-            "\tsubject_founder,\n" +
-            "\tsubject_time,\n" +
-            "\tsubject_private,\n" +
-            "\tsubject_size,\n" +
-            "\tsubject_official \n" +
+            "\tt_subject.* \n" +
             "FROM\n" +
-            "\tt_subject_choose,t_subject \n" +
+            "\tt_subject_choose\n" +
+            "\tINNER JOIN t_subject ON t_subject_choose.subject_id = t_subject.subject_id \n" +
             "WHERE\n" +
-            "\tt_subject_choose.subject_id = t_subject.subject_id \n" +
-            "\tAND t_subject_choose.user_id = #{userId}")
-    List<Yixuan> selectByExample(String userId);
+            "\tt_subject_choose.user_id = #{userId}")
+    List<Subject> selectByExample(String userId);
 }

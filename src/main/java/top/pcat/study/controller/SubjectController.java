@@ -3,7 +3,11 @@ package top.pcat.study.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import top.pcat.study.domain.Subject;
+import top.pcat.study.domain.Yixuan;
 import top.pcat.study.service.SubjectService;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -14,16 +18,19 @@ public class SubjectController {
     @Autowired
     SubjectService subjectService;
 
+    @GetMapping("/{userId}/un_official")
+    public List<Subject> getUnOfficialSubject(@PathVariable String userId) {
+        return this.subjectService.getSubject(0,userId);
+    }
 
-    @GetMapping
-    public String getSubject() {
-        return this.subjectService.getSubject();
+    @GetMapping("/{userId}/official")
+    public List<Subject> getSubject(@PathVariable String userId) {
+        return this.subjectService.getSubject(1,userId);
     }
 
 
     @GetMapping("/{userId}")
-    public String getYixuan(@PathVariable String userId) {
-        System.out.println("con=="+userId);
+    public List<Subject> getYixuan(@PathVariable String userId) {
         return this.subjectService.getYixuan(userId);
     }
 

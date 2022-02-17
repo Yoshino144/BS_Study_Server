@@ -36,21 +36,12 @@ public class SubjectService  {
 ////        this.userChooseMapper.insert()
 //    }
 
-    public String getSubject() {
-        List<Subject> subjectList =  this.subjectMapper.selectByExample();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(String.class, new StringNullAdapter());
-        Gson gson = gsonBuilder.create();
-        return gson.toJson(subjectList);
+    public List<Subject> getSubject(int official,String userId) {
+        return this.subjectMapper.selectByExample(official,userId);
     }
 
-    public String getYixuan(String userId) {
-        List<Yixuan> subjectList =  this.userChooseDao.selectByExample(userId);
-        System.out.println(userId);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(String.class, new StringNullAdapter());
-        Gson gson = gsonBuilder.create();
-        return gson.toJson(subjectList);
+    public List<Subject> getYixuan(String userId) {
+        return this.userChooseDao.selectByExample(userId);
     }
 
 //    @Override

@@ -10,6 +10,7 @@ public class Yixuan {
     private String subjectName;
     private Date chooseTime;
     private String subjectFounder;
+
     private Date subjectTime;
 
     private long subjectPrivate;
