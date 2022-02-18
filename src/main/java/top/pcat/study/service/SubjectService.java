@@ -13,6 +13,8 @@ import top.pcat.study.domain.Subject;
 import top.pcat.study.domain.Yixuan;
 import top.pcat.study.utils.StringNullAdapter;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 @Transactional
 @Slf4j
@@ -42,6 +44,21 @@ public class SubjectService  {
 
     public List<Subject> getYixuan(String userId) {
         return this.userChooseDao.selectByExample(userId);
+    }
+
+    public int upUserChoose(String subjectId, String userId) {
+        Date date = new Date();
+
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        return this.userChooseDao.upUserChoose(subjectId,userId,timestamp);
+    }
+
+    public int delUserChoose(String subjectId, String userId) {
+        Date date = new Date();
+
+        Timestamp timestamp = new Timestamp(date.getTime());
+        return this.userChooseDao.delUserChoose(subjectId,userId,timestamp);
     }
 
 //    @Override

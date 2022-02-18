@@ -34,4 +34,15 @@ public class SubjectController {
         return this.subjectService.getYixuan(userId);
     }
 
+    @PostMapping("/{subjectId}/users/{userId}")
+    public int upUserChoose(@PathVariable String subjectId,@PathVariable String userId){
+
+        return this.subjectService.upUserChoose(subjectId,userId);
+    }
+
+    @DeleteMapping("/{subjectId}/users/{userId}")
+    public int delUserChoose(@PathVariable String subjectId,@PathVariable String userId){
+
+        return this.subjectService.delUserChoose(subjectId,userId);
+    }
 }
