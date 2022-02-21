@@ -1,4 +1,4 @@
-package top.pcat.study.domain;
+package top.pcat.study.pojo;
 
 
 import lombok.Data;

@@ -3,7 +3,7 @@ package top.pcat.study.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import top.pcat.study.domain.UserAnswerData;
+import top.pcat.study.pojo.UserAnswerData;
 import top.pcat.study.service.UserAnswerService;
 
 import java.util.List;

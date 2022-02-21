@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pcat.study.dao.ChapterDao;
-import top.pcat.study.domain.Chapter;
+import top.pcat.study.pojo.Chapter;
 
 import java.util.List;
 @Transactional

@@ -49,3 +49,10 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  pageSizeZero: true
+  params:
+    count: countSql

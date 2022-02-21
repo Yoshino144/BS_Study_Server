@@ -2,7 +2,7 @@ package top.pcat.study.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import top.pcat.study.domain.Chapter;
+import top.pcat.study.pojo.Chapter;
 
 import java.util.List;
 @Mapper

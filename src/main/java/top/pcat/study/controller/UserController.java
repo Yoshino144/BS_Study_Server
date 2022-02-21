@@ -1,19 +1,18 @@
 package top.pcat.study.controller;
 
 import com.google.gson.Gson;
-import io.minio.BucketExistsArgs;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.http.Method;
+import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.pcat.study.domain.LoginReq;
-import top.pcat.study.domain.UserInfo;
+import top.pcat.study.pojo.LoginReq;
+import top.pcat.study.pojo.UserInfo;
 import top.pcat.study.entity.User;
 import top.pcat.study.service.UserInfoService;
 import top.pcat.study.service.UserService;
@@ -22,15 +21,14 @@ import top.pcat.study.utils.Msg;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 @RestController
 @Slf4j
-@RequestMapping( "/users")
+@RequestMapping("/users")
 public class UserController {
 
     private static final Gson gson = new Gson();
@@ -143,7 +141,7 @@ public class UserController {
      * 上传用户头像
      */
     @PutMapping("/{userId}/infos/{bucket}")
-    public Msg upImg(@PathVariable String userId,@PathVariable String bucket, HttpServletRequest request) {
+    public Msg upImg(@PathVariable String userId, @PathVariable String bucket, HttpServletRequest request) {
         // 头像 profile.photo
         String base64 = request.getParameter("base64");
         try {
@@ -160,12 +158,12 @@ public class UserController {
                             .build());
 
             String url = minioClient.getPresignedObjectUrl(
-                            GetPresignedObjectUrlArgs.builder()
-                                    .method(Method.GET)
-                                    .bucket(bucket)
-                                    .object(userId + ".png")
-                                    .expiry(7, TimeUnit.DAYS)
-                                    .build());
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(bucket)
+                            .object(userId + ".png")
+                            .expiry(7, TimeUnit.DAYS)
+                            .build());
             log.info(url);
             return Msg.success().mes("上传成功").data(url);
         } catch (Exception e) {
@@ -177,22 +175,23 @@ public class UserController {
     /**
      * 下载用户头像
      */
-    @GetMapping("/{userId}/infos/{bucket}")
-    public Msg getImg(@PathVariable String userId,@PathVariable String bucket) {
+    @Deprecated
+    @GetMapping("/{userId}/infos/{bucket}/deprecated")
+    public Msg getImgURrl(@PathVariable String userId, @PathVariable String bucket) {
         // Create a minioClient with the MinIO Server name, Port, Access key and Secret key.
         // Check if the bucket already exists.
-        InputStream result=null;
+        InputStream result = null;
         try {
             boolean isExist = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
-            if(!isExist){
+            if (!isExist) {
                 return Msg.fail().mes("bucket不存在");
             }
         } catch (Exception e) {
             return Msg.fail().mes("获取失败").data(e.toString());
         }
-        String url=null;
+        String url = null;
         try {
-            url=minioClient.getPresignedObjectUrl(new GetPresignedObjectUrlArgs().builder()
+            url = minioClient.getPresignedObjectUrl(new GetPresignedObjectUrlArgs().builder()
                     .bucket(bucket)
                     .object(userId + ".png")
                     .method(Method.GET)
@@ -201,5 +200,42 @@ public class UserController {
             return Msg.fail().mes("获取失败").data(e.toString());
         }
         return Msg.success().mes("获取成功").data(url);
+    }
+
+    @Deprecated
+    @GetMapping("/{userId}/infos/{bucket}")
+    // 头像 profile.photo
+    public ResponseEntity<byte[]> getImgFile(HttpServletResponse response , @PathVariable String userId, @PathVariable String bucket) {
+        try {
+            InputStream in = minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(userId + ".png")
+                            .build());
+            byte[] body = null;
+            body = new byte[in.available()];// 返回下一次对此输入流调用的方法可以不受阻塞地从此输入流读取（或跳过）的估计剩余字节数
+            in.read(body);// 读入到输入流里面
+
+            OutputStream out = response.getOutputStream();
+
+            byte[] buff =new byte[1024];
+            int index=0;
+            //4、执行 写出操作
+            while((index= in.read(buff))!= -1){
+                out.write(buff, 0, index);
+                out.flush();
+            }
+            out.close();
+
+//            HttpHeaders headers = new HttpHeaders();// 设置响应头
+//            headers.add("Content-Disposition", "attachment;filename=" +userId+".png");
+//            HttpStatus statusCode = HttpStatus.OK;// 设置响应吗
+//            ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(body, headers, statusCode);
+//            return response;
+        }catch (Exception e){
+
+        }
+
+        return null;
     }
 }

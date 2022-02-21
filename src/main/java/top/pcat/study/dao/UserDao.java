@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import top.pcat.study.domain.UserInfo;
 import top.pcat.study.entity.Perms;
 import top.pcat.study.entity.User;
 

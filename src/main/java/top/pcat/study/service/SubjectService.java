@@ -1,7 +1,5 @@
 package top.pcat.study.service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,9 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.pcat.study.dao.ChapterDao;
 import top.pcat.study.dao.SubjectDao;
 import top.pcat.study.dao.UserChooseDao;
-import top.pcat.study.domain.Subject;
-import top.pcat.study.domain.Yixuan;
-import top.pcat.study.utils.StringNullAdapter;
+import top.pcat.study.pojo.Subject;
 
 import java.sql.Timestamp;
 import java.util.Date;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pcat.study.dao.UserDao;
 import top.pcat.study.dao.UserInfoDao;
-import top.pcat.study.domain.UserInfo;
+import top.pcat.study.pojo.UserInfo;
 import top.pcat.study.entity.Perms;
 import top.pcat.study.entity.User;
 import top.pcat.study.utils.SaltUtils;

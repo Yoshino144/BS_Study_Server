@@ -2,7 +2,7 @@ package top.pcat.study.dao;
 
 
 import org.apache.ibatis.annotations.*;
-import top.pcat.study.domain.Subject;
+import top.pcat.study.pojo.Subject;
 
 import java.sql.Timestamp;
 import java.util.List;
