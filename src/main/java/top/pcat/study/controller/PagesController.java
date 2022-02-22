@@ -12,4 +12,9 @@ public class PagesController {
     public String yixuan(String userId){
         return "yixuan";
     }
+
+    @GetMapping("/pages/subject")
+    public String subject(){
+        return "subject";
+    }
 }

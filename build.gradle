@@ -44,11 +44,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'com.auth0:java-jwt:3.18.3'
 
-    implementation ('com.github.pagehelper:pagehelper-spring-boot-starter:1.2.3'){
-        exclude group: "org.mybatis" ,module: "mybatis"
-        exclude group: "org.mybatis" ,module: "mybatis-spring"
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
-    }
+//    implementation ('com.github.pagehelper:pagehelper-spring-boot-starter:1.2.3'){
+//        exclude group: "org.mybatis" ,module: "mybatis"
+//        exclude group: "org.mybatis" ,module: "mybatis-spring"
+//
+//    }
 }
 
 test {

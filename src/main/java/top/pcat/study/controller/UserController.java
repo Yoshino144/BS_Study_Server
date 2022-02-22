@@ -3,6 +3,8 @@ package top.pcat.study.controller;
 import com.google.gson.Gson;
 import io.minio.*;
 import io.minio.http.Method;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.crypto.hash.Md5Hash;
@@ -26,6 +28,7 @@ import java.io.*;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
+@Api(tags = "用户管理")
 @RestController
 @Slf4j
 @RequestMapping("/users")
@@ -45,6 +48,7 @@ public class UserController {
     /**
      * 通过 手机号+密码 登录
      */
+    @ApiOperation("通过 手机号+密码 登录")
     @GetMapping("/{phone}/{password}")
     public Msg login(@PathVariable String phone, @PathVariable String password) {
 
@@ -68,6 +72,7 @@ public class UserController {
     /**
      * 注册
      */
+    @ApiOperation("注册")
     @PostMapping("/{phone}/{password}/{name}")
     public Msg register(@PathVariable String phone, @PathVariable String password, @RequestBody String name) {
 
@@ -90,6 +95,7 @@ public class UserController {
     /**
      * 通过 手机号+验证码 登录
      */
+    @ApiOperation("通过 手机号+验证码 登录")
     @GetMapping("/{phone}")
     public Msg loginOnlyPhone(@PathVariable String phone) {
 
@@ -110,6 +116,7 @@ public class UserController {
     /**
      * 获取用户信息
      */
+    @ApiOperation("获取用户信息")
     @GetMapping("/{userId}/infos")
     public Msg getUserInfo(@PathVariable String userId) {
         try {
@@ -125,6 +132,7 @@ public class UserController {
     /**
      * 上传用户信息
      */
+    @ApiOperation("上传用户信息")
     @PutMapping("/infos")
     public Msg putUserInfo(@RequestBody String userInfoJson) {
         try {
@@ -140,6 +148,7 @@ public class UserController {
     /**
      * 上传用户头像
      */
+    @ApiOperation("上传用户头像")
     @PutMapping("/{userId}/infos/{bucket}")
     public Msg upImg(@PathVariable String userId, @PathVariable String bucket, HttpServletRequest request) {
         // 头像 profile.photo
@@ -175,6 +184,7 @@ public class UserController {
     /**
      * 下载用户头像
      */
+    @ApiOperation("下载用户头像")
     @Deprecated
     @GetMapping("/{userId}/infos/{bucket}/deprecated")
     public Msg getImgURrl(@PathVariable String userId, @PathVariable String bucket) {
@@ -202,7 +212,7 @@ public class UserController {
         return Msg.success().mes("获取成功").data(url);
     }
 
-    @Deprecated
+    @ApiOperation("下载用户头像")
     @GetMapping("/{userId}/infos/{bucket}")
     // 头像 profile.photo
     public ResponseEntity<byte[]> getImgFile(HttpServletResponse response , @PathVariable String userId, @PathVariable String bucket) {

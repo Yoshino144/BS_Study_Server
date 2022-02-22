@@ -1,6 +1,9 @@
 package top.pcat.study.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.pcat.study.pojo.Subject;
@@ -43,5 +46,18 @@ public class SubjectController {
     public int delUserChoose(@PathVariable String subjectId,@PathVariable String userId){
 
         return this.subjectService.delUserChoose(subjectId,userId);
+    }
+
+    @GetMapping("/current/{current}/size/{size}")
+    public List<Subject> textPage(@PathVariable Integer current,@PathVariable Integer size) {
+        Page<Subject> userPage = new Page<>(current, size);
+        IPage<Subject> iPage = subjectService.selectPageText(userPage);
+        if (iPage.getRecords().size() != 0) {
+            List<Subject> mpUserList1 = iPage.getRecords();
+            mpUserList1.forEach(System.out::println);
+            return mpUserList1;
+        } else {
+            return null;
+        }
     }
 }

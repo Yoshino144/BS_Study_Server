@@ -1,5 +1,7 @@
 package top.pcat.study.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ import java.util.List;
 @Service
 public class SubjectService  {
 
+    public IPage<Subject> selectPageText(Page<Subject> page) {
+        return subjectMapper.selectpage(page);
+    }
 
     @Autowired
     SubjectDao subjectMapper;

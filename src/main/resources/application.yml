@@ -24,7 +24,6 @@ server:
       enabled: true
   tomcat:
     uri-encoding: UTF-8
-
 spring:
   banner:
     location: static/banner.txt
@@ -48,11 +47,7 @@ spring:
     mode: HTML
     prefix: classpath:/templates/
     suffix: .html
+  mvc:
+    path match:
+      matching-strategy: ANT_PATH_MATCHER
 
-pagehelper:
-  helper-dialect: mysql
-  reasonable: true
-  support-methods-arguments: true
-  pageSizeZero: true
-  params:
-    count: countSql
