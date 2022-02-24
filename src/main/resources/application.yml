@@ -47,6 +47,8 @@ spring:
     mode: HTML
     prefix: classpath:/templates/
     suffix: .html
+    servlet:
+      content-type: text/html
   mvc:
     path match:
       matching-strategy: ANT_PATH_MATCHER

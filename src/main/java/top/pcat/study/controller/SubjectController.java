@@ -48,7 +48,7 @@ public class SubjectController {
         return this.subjectService.delUserChoose(subjectId,userId);
     }
 
-    @GetMapping("/current/{current}/size/{size}")
+    @GetMapping("?page={current}&limit={size}")
     public List<Subject> textPage(@PathVariable Integer current,@PathVariable Integer size) {
         Page<Subject> userPage = new Page<>(current, size);
         IPage<Subject> iPage = subjectService.selectPageText(userPage);

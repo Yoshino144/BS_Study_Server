@@ -4,10 +4,10 @@ var tableIns;
 $(function () {
     layui.use('table', function () {
         var table = layui.table;
-
+//给v会比较精彩发挥借记卡
         tableIns = table.render({
             elem: '#uesrList',
-            url: '/subjects/current/{current}/size/{size}',
+            url: '/subjects',
             method: 'post', //默认：get请求
             cellMinWidth: 60,
             page: true,
