@@ -1,5 +1,8 @@
 package top.pcat.study.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import top.pcat.study.dao.UserInfoDao;
 import top.pcat.study.pojo.UserInfo;
 import top.pcat.study.entity.Perms;
 import top.pcat.study.entity.User;
+import top.pcat.study.utils.Msg;
 import top.pcat.study.utils.SaltUtils;
 import top.pcat.study.utils.UUIDUtils;
 
@@ -95,4 +99,8 @@ public class UserService  {
         return null;
     }
 
+    public String getAllUsers() {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        return gson.toJson(userDAO.getAllUsers());
+    }
 }

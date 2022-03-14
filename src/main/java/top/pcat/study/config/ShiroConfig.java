@@ -52,6 +52,7 @@ public class ShiroConfig {
         filterRuleMap.put("/webjars/**", "anon");
         //放行登录接口和其他不需要权限的接口
         filterRuleMap.put("/login", "anon");
+        filterRuleMap.put("/index", "anon");
         filterRuleMap.put("/unauthorized/**", "anon");
 
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);

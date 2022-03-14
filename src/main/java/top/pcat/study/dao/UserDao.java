@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import top.pcat.study.entity.Perms;
 import top.pcat.study.entity.User;
+import top.pcat.study.pojo.UserInfo;
 
 import java.util.List;
 
@@ -59,5 +60,11 @@ public interface UserDao extends BaseMapper<User> {
             "      LEFT JOIN t_perms p ON rp.permsid=p.id\n" +
             "      WHERE r.id=#{id}")
     List<Perms> findPermsByRoleId(String id);
+
+    @Select("SELECT\n" +
+            "\tt_user_info.*\n" +
+            "FROM\n" +
+            "\tt_user_info")
+    List<UserInfo> getAllUsers();
 }
 

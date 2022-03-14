@@ -1,35 +1,139 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>index.html</title>
+    <meta charset="utf-8">
+    <title>主页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css" media="all">
 </head>
-<body>
+<body class="layui-layout-body">
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <!--头部导航-->
+        <div th:replace="~{public/header::header}"></div>
+        <!--侧边菜单-->
+        <div th:replace="~{public/sider::sider('index','index')}"></div>
+        <div class="layui-body" id="LAY_app_body" >
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-sm6  layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">基本信息</div>
+                            <div class="layui-card-body">
 
-    <h1>欢迎访问主页</h1>
+                                <div class="layui-carousel layadmin-carousel layadmin-backlog">
+                                    <div carousel-item>
+                                        <ul class="layui-row layui-col-space10">
+                                            <li class="layui-col-xs6">
+                                            </li>
+                                            <li class="layui-col-xs6">
+                                            </li>
+                                            <li class="layui-col-xs6">
+                                            </li>
+                                            <li class="layui-col-xs6">
+                                            </li>
+                                        </ul>
+                                        <ul class="layui-row layui-col-space10">
+                                            <li class="layui-col-xs6">
+                                            </li>
+                                            <li class="layui-col-xs6">
+                                                <a href="javascript:;" class="layadmin-backlog-body">
+                                                    <h3>草稿</h3></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6 layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                访问量
+                                <span class="layui-badge layui-bg-blue layuiadmin-badge">周</span>
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+                                <p>
+                                    总计访问量
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6 layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                留言总量
+                                <span class="layui-badge layui-bg-cyan layuiadmin-badge">总</span>
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+                                <p>
+                                    &nbsp;
+                                    <span class="layuiadmin-span-color"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-sm6 layui-col-md3">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                浏览最多的新闻
+                                <span class="layui-badge layui-bg-green layuiadmin-badge">总</span>
+                            </div>
+                            <div class="layui-card-body layuiadmin-card-list">
+ <p>
+                                    浏览次数
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-header">数据概览</div>
+                            <div class="layui-card-body">
 
-    <!--获取身份信息-->
-    <span shiro:principal=""></span>
+                                <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade"
+                                     lay-filter="LAY-index-dataview">
+                                    <div carousel-item id="LAY-index-dataview">
+                                        <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-sm12">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-sm6">
+                            <div class="layui-card">
+                                <div class="layui-card-header">热门新闻</div>
+                                <div class="layui-card-body">
+                                    <table class="layui-table layuiadmin-page-table" lay-skin="line">
+                                        <thead>
+                                        <tr>
+                                            <th>标题</th>
+                                            <th>作者</th>
+                                            <th>创建时间</th>
+                                            <th>获得赞</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!--认证处理-->
-    <span shiro:authenticated="">
-        认证通过展示内容
-    </span>
-    <span shiro:notAuthenticated="">
-        没有认证展示的内容
-    </span>
-
-    <!--授权角色-->
-    <span shiro:hasRole="admin">
-        this is admin
-    </span>
-
-    <!--资源授权-->
-    <span shiro:hasPermission="category:*:01">
-        具有用户模块权限
-    </span>
-
-
+<script src="https://www.layuicdn.com/layui-v2.5.6/layui.js"></script>
 </body>
 </html>

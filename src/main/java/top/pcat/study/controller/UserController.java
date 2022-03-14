@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Base64;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Api(tags = "用户管理")
@@ -46,6 +47,21 @@ public class UserController {
     private UserInfoService userInfoService;
 
     /**
+     * 获取全部用户
+     */
+    @ApiOperation("获取全部用户")
+    @GetMapping("/all")
+    public String allUsers() {
+        String s = userService.getAllUsers();
+            return "{\"data\":" + s + ",\n" +
+                    "\t\"total\": 100,\n" +
+                    "\t\"success\": true,\n" +
+                    "\t\"pageSize\": 20,\n" +
+                    "\t\"current\": 1\n" +
+                    "}";
+    }
+
+    /**
      * 通过 手机号+密码 登录
      */
     @ApiOperation("通过 手机号+密码 登录")
@@ -58,6 +74,7 @@ public class UserController {
             return Msg.fail().mes("用户名错误");
         }
         Md5Hash md5Hash = new Md5Hash(password, user.getSalt(), 1024);
+        System.out.println(user.getPassword()+"--!!!--"+md5Hash);
         if (!user.getPassword().equals(md5Hash.toString())) {
             return Msg.fail().mes("密码错误");
         } else {
