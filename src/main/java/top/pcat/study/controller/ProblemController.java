@@ -1,4 +1,6 @@
 package top.pcat.study.controller;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,17 @@ public class ProblemController {
         return this.problemService.getProblem(subjectId,chapterId);
     }
 
+    @GetMapping("/page/{subjectId}/{chapterId}")
+    public String getPageProblem(@PathVariable String subjectId, @PathVariable  String chapterId) {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        return "{\n" +
+                "\t\"data\": "+gson.toJson(this.problemService.getProblem(subjectId,chapterId))+",\n" +
+                "\t\"total\": 100,\n" +
+                "\t\"success\": true,\n" +
+                "\t\"pageSize\": 20,\n" +
+                "\t\"current\": 1\n" +
+                "}";
+    }
 
 }
 

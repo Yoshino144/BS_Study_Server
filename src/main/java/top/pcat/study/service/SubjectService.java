@@ -2,10 +2,13 @@ package top.pcat.study.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import top.pcat.study.dao.ChapterDao;
 import top.pcat.study.dao.SubjectDao;
 import top.pcat.study.dao.UserChooseDao;
@@ -60,6 +63,20 @@ public class SubjectService  {
 
         Timestamp timestamp = new Timestamp(date.getTime());
         return this.userChooseDao.delUserChoose(subjectId,userId,timestamp);
+    }
+
+    public String getAllSubject() {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        return gson.toJson(subjectMapper.getAllSubject());
+    }
+
+    public void addSubject(String subjectDesc,String subjectName,String subjectPrivate) {
+        Subject subject = new Subject();
+        subject.setSubjectDesc(subjectDesc);
+        subject.setSubjectName(subjectName);
+        subject.setSubjectTime(new Date());
+        subject.setSubjectPrivate(subjectPrivate);
+        this.subjectMapper.addSubject(subject);
     }
 
 //    @Override

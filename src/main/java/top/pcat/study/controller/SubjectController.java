@@ -3,7 +3,6 @@ package top.pcat.study.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.pcat.study.pojo.Subject;
@@ -19,6 +18,23 @@ public class SubjectController {
 
     @Autowired
     SubjectService subjectService;
+
+    @PostMapping("/add")
+    public void addSubject(@RequestParam("subjectDesc") String subjectDesc,
+                           @RequestParam("subjectName") String subjectName,
+                           @RequestParam("subjectPrivate") String subjectPrivate){
+        subjectService.addSubject(subjectDesc, subjectName, subjectPrivate);
+    }
+
+    @GetMapping("/all")
+    public String getAllSubject() {
+        return "{\n" +
+                "\t\"data\": {\n" +
+                "\t\t\"list\": " +
+                this.subjectService.getAllSubject() +
+                "\t}\n" +
+                "}";
+    }
 
     @GetMapping("/{userId}/un_official")
     public List<Subject> getUnOfficialSubject(@PathVariable String userId) {

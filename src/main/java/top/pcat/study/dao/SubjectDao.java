@@ -2,6 +2,7 @@ package top.pcat.study.dao;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -27,4 +28,10 @@ public interface SubjectDao {
             "\tsubject_official = #{official}")
     List<Subject> selectByExample(@Param("official") int official,@Param("userId") String userId);
 
+    @Select("SELECT * FROM t_subject")
+    List<Subject> getAllSubject();
+
+    @Insert("INSERT INTO t_subject(subject_name, subject_time, subject_desc, subject_private) " +
+            "VALUES(#{subjectName},#{subjectTime},#{subjectDesc},#{subjectPrivate})")
+    void addSubject(Subject subject);
 }
