@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pcat.study.dao.UserAnswerDao;
-import top.pcat.study.pojo.UserAnswerData;
+import top.pcat.study.pojo.*;
 
 import java.util.List;
 
@@ -28,5 +28,27 @@ public class UserAnswerService {
         return userAnswerDao.getAnswerProblem(userId);
     }
 
+    /**
+     * 上传做题记录
+     * @return
+     */
+    public int upProblemData(String user_id,int subject_id, int chapter_id,int problem_id,String answer,int true_flag) {
+        return userAnswerDao.upProblemData(user_id, subject_id, chapter_id, problem_id, answer, true_flag);
+    }
 
+    public List<Wrong> getWrongSbuject(String userId) {
+        return userAnswerDao.getWrongSbuject(userId);
+    }
+
+    public List<WrongChapter> getWrongChapter(String userId, String subjectId) {
+        return userAnswerDao.getWrongChapter(userId,subjectId);
+    }
+
+    public List<WrongProblem> getWrongPm(String userId, String chapterId, String subjectId) {
+        return userAnswerDao.getWrongPm(userId,chapterId,subjectId);
+    }
+
+    public List<WrongProblem> getRandomProblem(String userId) {
+        return userAnswerDao.getRandomProblem(userId);
+    }
 }
