@@ -57,7 +57,7 @@ public class UserRong {
                 .setName("pc")
                 .setPortrait("https://s3.bmp.ovh/imgs/2022/01/f2af36fd8a17eb69.jpeg");
         TokenResult result = User.register(user);
-        System.out.println("getToken:  " + result.toString());
+        System.out.println("getToken: " + result.toString());
 //
 //        /**
 //         *

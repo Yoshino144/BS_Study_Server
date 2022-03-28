@@ -8,6 +8,8 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.pcat.study.dao.AccountDao;
+import top.pcat.study.dao.RongDao;
 import top.pcat.study.dao.UserDao;
 import top.pcat.study.dao.UserInfoDao;
 import top.pcat.study.pojo.UserInfo;
@@ -28,6 +30,10 @@ public class UserService  {
     private UserDao userDAO;
     @Autowired
     private UserInfoDao userInfoDao;
+    @Autowired
+    private RongDao rongDao;
+    @Autowired
+    private AccountDao accountDao;
 
     public User getAllByPhone(String phone){
         return userDAO.getAllByPhone(phone);
@@ -46,14 +52,24 @@ public class UserService  {
         flag += userDAO.insert(new User(uuid,md5Hash.toString(),salt,null));
         //插入用户数据
         flag += userInfoDao.insert(new UserInfo(uuid,phone,name));
+        try {
+            String rongToken = rongDao.register(uuid,name);
+            int res = accountDao.insert(uuid, rongToken, "rong");
+            if (res >0){
+                return flag;
+            }
+            else{
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return flag;
     }
-
 
     public User login(String username, String password){
         return userDAO.login(username, password);
     }
-
 
     public List<Perms> findPermsByRoleId(String id) {
         return userDAO.findPermsByRoleId(id);

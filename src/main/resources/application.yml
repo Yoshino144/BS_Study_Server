@@ -1,10 +1,21 @@
 logging:
   level:
     root: info
+
+rong:
+  appKey: pvxdm17jpdhyr
+  appSecret: hblyRTXJjrkUEw
+  api: http://api-cn.ronghub.com
+
 minio:
   accessKey: admin
   endpoint: http://localhost:9090
   secretKey: admin1234
+
+#minio:
+#  accessKey: minioadmin
+#  endpoint: http://localhost:9090
+#  secretKey: minioadmin
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -15,7 +26,7 @@ mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
 server:
   max-http-header-size: 10240000
-  port: 12345
+  port: 12343
   servlet:
     context-path: /
     encoding:
@@ -33,6 +44,9 @@ spring:
       password: root
       url: jdbc:mysql://localhost:3305/online_study
       username: root
+#      password: pcatroot
+#      url: jdbc:mysql://localhost:12344/online_study
+#      username: online_study
   redis:
     database: 0
     host: localhost

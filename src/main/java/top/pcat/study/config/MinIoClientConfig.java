@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MinIoClientConfig {
+
     @Value("${minio.endpoint}")
     private String endpoint;
     @Value("${minio.accessKey}")
