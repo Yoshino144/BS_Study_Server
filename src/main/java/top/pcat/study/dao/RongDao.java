@@ -33,6 +33,7 @@ public class RongDao {
 
     public void createGroup(String userId,String groupId,String groupName){
         Group group = rongCloudConfig.rongCloud().group;
+        System.out.println("创建群组");
         /**
          * API 文档: http://www.rongcloud.cn/docs/server_sdk_api/group/group.html#create
          *
@@ -51,6 +52,7 @@ public class RongDao {
             e.printStackTrace();
         }
         assert groupCreateResult != null;
+        System.out.println("创建群组结果"+groupCreateResult);
         log.info(groupCreateResult.toString());
     }
 

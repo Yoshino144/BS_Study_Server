@@ -1,6 +1,7 @@
 package top.pcat.study.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.pcat.study.pojo.Clasp;
@@ -20,8 +21,8 @@ public class ClassController {
      * 创建班级
      */
 
-    @PostMapping("/{userId}/{className}")
-    public int createClass(@PathVariable String userId, @PathVariable String className){
+    @PostMapping("/{userId}")
+    public int createClass(@PathVariable String userId, @Param("className") String className){
         return classService.createClass(userId,className);
     }
 

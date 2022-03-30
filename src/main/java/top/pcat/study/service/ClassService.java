@@ -24,10 +24,10 @@ public class ClassService {
 
     public int createClass(String adminId,String className) {
         try{
-
             classDao.createClass(adminId, className);
             int id= classDao.selectIdByName(className);
             rongDao.createGroup(adminId,String.valueOf(id),className);
+            classDao.joinClass(adminId, String.valueOf(id));
             return 1;
         }catch (Exception e){
             e.printStackTrace();
