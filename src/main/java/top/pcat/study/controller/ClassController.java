@@ -17,6 +17,7 @@ public class ClassController {
     @Autowired
     ClassService classService;
 
+
     /**
      * 创建班级
      */
@@ -49,7 +50,8 @@ public class ClassController {
      */
 
     @PutMapping("/{userId}/{classId}")
-    public int joinClass(@PathVariable String userId,@PathVariable String classId){
-        return classService.joinClass(userId, classId);
+    public int joinClass(@PathVariable String userId,@PathVariable String classId,  @Param("className") String className){
+        log.info("加入班级"+userId+" "+classId+" "+className);
+        return classService.joinClass(userId, classId, className);
     }
 }

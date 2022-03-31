@@ -8,8 +8,6 @@ import io.rong.models.group.GroupModel;
 import io.rong.models.response.TokenResult;
 import io.rong.models.user.UserModel;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Mapper;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.pcat.study.config.RongCloudConfig;
@@ -22,6 +20,7 @@ public class RongDao {
     RongCloudConfig rongCloudConfig;
 
     public String register(String uuid, String name) throws Exception {
+        Group group = rongCloudConfig.rongCloud().group;
         User user = rongCloudConfig.rongCloud().user;
         UserModel userModel = new UserModel()
                 .setId(uuid)
@@ -57,4 +56,15 @@ public class RongDao {
     }
 
 
+    public void joinClass(String userId, String classId, String className) throws Exception {
+        Group group = rongCloudConfig.rongCloud().group;
+        GroupMember[] members = {new GroupMember().setId(userId)};
+        GroupModel groupModel = new GroupModel()
+                .setId(classId)
+                .setName(className)
+                .setMembers(members);
+        Result groupJoinResult = (Result)group.join(groupModel);
+        System.out.println("join:  " + groupJoinResult.toString());
+        //return groupJoinResult.toString();
+    }
 }

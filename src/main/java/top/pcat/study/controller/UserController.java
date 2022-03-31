@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import top.pcat.study.pojo.LoginReq;
 import top.pcat.study.pojo.UserInfo;
 import top.pcat.study.entity.User;
+import top.pcat.study.service.AccoutService;
 import top.pcat.study.service.UserInfoService;
 import top.pcat.study.service.UserService;
 import top.pcat.study.shiro.JWTUtil;
@@ -45,6 +46,14 @@ public class UserController {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    @Autowired
+    private AccoutService accoutService;
+
+    @GetMapping("/rongToken")
+    public String getRongToken(String userId){
+        return accoutService.getRongToken(userId);
+    }
 
     /**
      * 获取全部用户

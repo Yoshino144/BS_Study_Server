@@ -40,7 +40,12 @@ public class ClassService {
         return classDao.getClassList(userId);
     }
 
-    public int joinClass(String userId, String classId) {
+    public int joinClass(String userId, String classId, String className) {
+        try {
+            rongDao.joinClass(userId,classId,className);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return classDao.joinClass(userId,classId);
     }
 
